@@ -1,26 +1,39 @@
-import React, { useState } from 'react';
-import { Text, View, Image, KeyboardAvoidingView } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
-import Header from '../components/PrayerDetails/Header';
+import React, { useState, useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { PrayerDetailsRouteProp, PrayerDetailsScreenProp } from '../types';
+import {
+  PrayerDetailsRouteProp,
+  PrayerDetailsScreenProp,
+} from '../types/navigationsType';
+import { TouchableOpacity } from 'react-native';
+import BackSvg from '../assets/svg/Back';
+import PrayerLine from '../assets/svg/PrayerLine';
 import PlusSvg from '../assets/svg/Plus';
-import { signUp } from '../api/user';
+import { Form, Field } from 'react-final-form';
+import AddCommentInput from '../components/PrayerDetails/CommentInput';
+import { useNavigation } from '@react-navigation/core';
+import { useDispatch } from 'react-redux';
 import CommentSvg from '../assets/svg/Comment';
 import CommentList from '../components/PrayerDetails/CommentList';
-import { signUpActionCreator } from '../store/saga/User/actions';
 import {
+  requestGetCommentsAction,
+  requestCreateCommentAction,
+} from '../store/saga/Comments/actions';
+import {
+  HeaderContainer,
+  Headerbutton,
+  TextContainer,
+  TextTitle,
   LastTime,
   IndecateActive,
   LastTimeText,
-  ButtonAdd,
+  AddMembersButton,
   Context,
+  AddCommentButton,
   OpenHistoryText,
-  AddComment,
+  AddCommentForm,
   ImageMembers,
   DataPrayerTime,
   MainContainer,
-  AddCommentInput,
   Date,
   RowContainer,
   Members,
@@ -28,17 +41,41 @@ import {
   Score,
   DateAded,
   TimesTotal,
-  TimeTextContainer,
   Caption,
   TimesOthers,
   TimesMe,
 } from '../styles/components/PrayerDetailsStyle';
 function PrayerDetails() {
+  const navigations = useNavigation<PrayerDetailsScreenProp>();
   const route = useRoute<PrayerDetailsRouteProp>();
-  const [comment, onChangeComment] = useState('');
+  const dispatch = useDispatch();
+  const [title, useTitle] = useState('');
+  useEffect(() => {
+    dispatch(requestGetCommentsAction());
+  }, []);
+  function onSubmit() {
+    if (title.trim() !== '')
+      dispatch(
+        requestCreateCommentAction({
+          id: route.params.prayerDetail.id,
+          body: title,
+        }),
+      );
+    useTitle('');
+  }
   return (
     <MainContainer>
-      <Header title={route.params.prayerDetail.title} />
+      <HeaderContainer>
+        <Headerbutton>
+          <TouchableOpacity onPress={navigations.goBack}>
+            <BackSvg />
+          </TouchableOpacity>
+          <PrayerLine fill={'#ffff'} />
+        </Headerbutton>
+        <TextContainer>
+          <TextTitle>{route.params.prayerDetail.title}</TextTitle>
+        </TextContainer>
+      </HeaderContainer>
       <LastTime>
         <IndecateActive></IndecateActive>
         <LastTimeText>Last prayed 8 min ago</LastTimeText>
@@ -71,21 +108,32 @@ function PrayerDetails() {
         <Members>
           <ImageMembers source={require('../assets/png/eeww.png')} />
           <ImageMembers source={require('../assets/png/erfer.png')} />
-          <ButtonAdd>
+          <AddMembersButton>
             <PlusSvg fill={'#fff'} size={17} />
-          </ButtonAdd>
+          </AddMembersButton>
         </Members>
         <Caption>COMMENTS</Caption>
       </MembersContainer>
-      <CommentList />
-      <AddComment>
-        <CommentSvg />
-        <AddCommentInput
-          placeholder="Add a comment..."
-          onChangeText={onChangeComment}
-          value={comment}
-        />
-      </AddComment>
+      <CommentList prayerId={route.params.prayerDetail.id} />
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit }) => (
+          <AddCommentForm>
+            <AddCommentButton onPress={handleSubmit}>
+              <CommentSvg />
+            </AddCommentButton>
+            <Field
+              name="title"
+              lable="Title"
+              component={AddCommentInput}
+              title={title}
+              onChangeText={(val: string) => {
+                useTitle(val);
+              }}
+            />
+          </AddCommentForm>
+        )}
+      />
     </MainContainer>
   );
 }

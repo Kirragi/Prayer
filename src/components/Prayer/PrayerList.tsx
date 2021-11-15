@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { slelectPrayer } from '../../store/reducer';
-import { View } from 'react-native';
+import { slelectPrayer } from '../../store/saga/Prayer/reducer';
 import {
   ShowButtonContainer,
   TextShowButton,
   ScrollPrayer,
   ShowButton,
 } from '../../styles/components/PrayerStyle';
+import { PrayerListProps } from '../../types';
 import Prayer from './Prayer';
-function PrayerList(props: { column: string }) {
+function PrayerList(props: PrayerListProps) {
   const prayers = useSelector(slelectPrayer(props.column, false));
   const prayersChecked = useSelector(slelectPrayer(props.column, true));
   const [showPrayer, stateShowPrayer] = useState(true);
@@ -21,7 +21,7 @@ function PrayerList(props: { column: string }) {
   });
   return (
     <ScrollPrayer>
-      <View style={{ marginBottom: 16 }}>{prayerList}</View>
+      {prayerList}
       <ShowButtonContainer>
         <ShowButton onPress={() => stateShowPrayer(!showPrayer)}>
           <TextShowButton>
@@ -29,9 +29,7 @@ function PrayerList(props: { column: string }) {
           </TextShowButton>
         </ShowButton>
       </ShowButtonContainer>
-      <View style={{ marginTop: 16 }}>
-        {showPrayer ? prayerListChecked : <View></View>}
-      </View>
+      {showPrayer ? prayerListChecked : <></>}
     </ScrollPrayer>
   );
 }

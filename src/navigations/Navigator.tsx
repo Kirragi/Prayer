@@ -1,23 +1,16 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Registration from '../screens/RegistrationScreen';
-import Authentication from '../screens/AuthenticationScreen';
-import MyDesk from '../screens/MyDesk';
-import Prayer from '../screens/PrayerScreens';
-import PrayerDetails from '../screens/PrayerDetailsScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './AppNavigator';
+import { useSelector } from 'react-redux';
+import AuthNavigator from './AuthNavigator';
+import { State } from '../types';
 
-const Stack = createNativeStackNavigator();
 function Navigator() {
+  const isLogged = useSelector((state: State) => state.user.logged);
   return (
-    <Stack.Navigator
-      initialRouteName="App"
-      screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Registration" component={Registration} />
-      <Stack.Screen name="Authentication" component={Authentication} />
-      <Stack.Screen name="MyDesk" component={MyDesk} />
-      <Stack.Screen name="Prayer" component={Prayer} />
-      <Stack.Screen name="Details" component={PrayerDetails} />
-    </Stack.Navigator>
+    <NavigationContainer>
+      {isLogged ? <AppNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
   );
 }
 export default Navigator;

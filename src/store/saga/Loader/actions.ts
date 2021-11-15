@@ -1,4 +1,8 @@
 import { laoderSlice } from '../Loader/reducer';
 
-export const { setUserLoader: setUserLoaderActionCreator } =
+export const {
+    setUserLoader: setUserLoaderAction,
+    setColumnsLoader: setColumnsLoaderAction,
+    setPrayerLoader: setPrayerLoaderAction,
+    setCommentsLoader: setCommentsLoaderAction } =
     laoderSlice.actions;

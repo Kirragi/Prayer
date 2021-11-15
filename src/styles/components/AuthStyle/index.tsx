@@ -21,6 +21,8 @@ export const InputAuth = styled.TextInput`
 export const ButtonSign = styled.TouchableOpacity`
   height: 50px;
   width: 100px;
+  max-height: 40px;
+  min-height: 40px;
   margin: 15px;
   background-color: #bfb393;
   flex: 1;
@@ -31,6 +33,8 @@ export const ButtonSign = styled.TouchableOpacity`
 export const ButtonReg = styled.TouchableOpacity`
   height: 50px;
   width: 100px;
+  max-height: 40px;
+  min-height: 40px;
   margin: 15px;
   flex: 1;
   border-width: 2px;
@@ -40,17 +44,19 @@ export const ButtonReg = styled.TouchableOpacity`
   border-radius: 30px;
 `;
 export const ButtonContainer = styled.View`
-  height: 40px;
+  max-height: 40px;
+  min-height: 40px;
   width: 330px;
   flex: 1;
+  margin-bottom: 100px;
   flex-direction: row;
   justify-content: space-between;
 `;
-export const ProfileSvg = styled.View`
+export const SvgContainer = styled.View`
   margin-bottom: 20px;
   margin-top: 30px;
 `;
-export const AurhText = styled.Text`
+export const AuthText = styled.Text`
   color: #bfb393;
   font-size: 24px;
 `;

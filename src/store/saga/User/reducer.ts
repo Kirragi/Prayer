@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User, UserSignIn, UserSignUp } from '../../../types';
+import { State } from '../../../types';
 
 const userInitialState: User = {
     id: '',
@@ -73,3 +74,4 @@ export const userSlice = createSlice({
         },
     },
 });
+export const slelectUser = (state: State) => state.user;

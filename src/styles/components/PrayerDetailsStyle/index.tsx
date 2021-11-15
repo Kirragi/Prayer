@@ -167,7 +167,7 @@ export const Members = styled.View`
   align-items: center;
   flex-direction: row;
 `;
-export const ButtonAdd = styled.TouchableOpacity`
+export const AddMembersButton = styled.TouchableOpacity`
   max-width: 32px;
   max-height: 32px;
   min-height: 32px;
@@ -187,6 +187,7 @@ export const ImageMembers = styled.Image`
 `;
 export const CommentContainer = styled.View`
   max-width: 100%;
+  min-width: 100%;
   max-height: 74px;
   min-height: 74px;
   flex: 1;
@@ -194,6 +195,7 @@ export const CommentContainer = styled.View`
   align-items: center;
   padding-left: 15px;
   border-bottom-width: 1px;
+  background-color: #ffff;
   border-color: #e5e5e5;
 `;
 export const HeadComment = styled.View`
@@ -235,7 +237,7 @@ export const ScrollComments = styled.ScrollView`
   max-height: 180px;
   min-height: 0px;
 `;
-export const AddComment = styled.View`
+export const AddCommentForm = styled.View`
   background-color: #ffff;
   width: 100%;
   max-height: 56px;
@@ -249,11 +251,16 @@ export const AddComment = styled.View`
   padding-left: 16px;
 `;
 
-export const AddCommentInput = styled.TextInput`
+export const CommentInput = styled.TextInput`
   width: 300px;
   color: #000000;
   font-size: 17px;
   line-height: 20px;
   border-width: 0px;
   margin-left: 12px;
+`;
+export const AddCommentButton = styled.TouchableOpacity`
+  max-width: 25px;
+  max-height: 25px;
+  min-height: 25px;
 `;

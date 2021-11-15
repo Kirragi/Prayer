@@ -6,17 +6,13 @@ import {
   TextMenu,
   ActiveTextMenu,
 } from '../../styles/components/PrayerStyle';
-import { useSelector, useDispatch } from 'react-redux';
-import { activePrayers, activeSubscribed } from '../../store/actions';
-import { State } from '../../types';
-function PrayerMenu() {
+import { PrayerMenyProps } from '../../types';
+function PrayerMenu(props: PrayerMenyProps) {
   let menu: JSX.Element;
-  let active = useSelector((state: State) => state.PrayerMenu);
-  let dispatch = useDispatch();
-  if (active) {
+  if (props.statusMenu) {
     menu = (
       <MenuContainer>
-        <NoneActiveContainer onPress={() => dispatch(activePrayers())}>
+        <NoneActiveContainer onPress={() => props.useStausMenu(false)}>
           <TextMenu>MY PRAYERS</TextMenu>
         </NoneActiveContainer>
         <ActiveContainer>
@@ -30,7 +26,7 @@ function PrayerMenu() {
         <ActiveContainer>
           <ActiveTextMenu>MY PRAYERS</ActiveTextMenu>
         </ActiveContainer>
-        <NoneActiveContainer onPress={() => dispatch(activeSubscribed())}>
+        <NoneActiveContainer onPress={() => props.useStausMenu(true)}>
           <TextMenu>SUBSCRIBED</TextMenu>
         </NoneActiveContainer>
       </MenuContainer>

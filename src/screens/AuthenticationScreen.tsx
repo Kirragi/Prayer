@@ -5,31 +5,84 @@ import {
   ButtonReg,
   ButtonContainer,
   MainContainer,
-  AurhText,
+  AuthText,
   SignText,
+  SvgContainer,
   RegText,
 } from '../styles/components/AuthStyle';
-import { ProfileImg } from '../components/Authorization/ProfileImg';
-import { InputLogin } from '../components/Authorization/InputLogin';
-import { InputPass } from '../components/Authorization/InputPass';
-import { authenticationScreenProp } from '../types';
-
+import { Text, View } from 'react-native';
+import AuthInput from '../components/Authentication/AuthInput';
+import { authenticationScreenProp } from '../types/navigationsType';
+import { requestSignInAction } from '../store/saga/User/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { Form, Field } from 'react-final-form';
+import { validationEmail, validationPass } from '../store/validation';
+import { slelectUser } from '../store/saga/User/reducer';
+import { slelectUserLoader } from '../store/saga/Loader/reducer';
+import SvgProfile from '../assets/svg/profile';
 function Authentication() {
+  const user = useSelector(slelectUser);
+  const userLoader = useSelector(slelectUserLoader);
+  const [email, onChangeEmail] = React.useState('');
+  const [password, onChangePassword] = React.useState('');
+  const dispatch = useDispatch();
   const navigations = useNavigation<authenticationScreenProp>();
+  function onSubmit() {
+    if (
+      !validationPass(password).errorExists &&
+      !validationEmail(email).errorExists
+    ) {
+      dispatch(
+        requestSignInAction({
+          email: email,
+          password: password,
+        }),
+      );
+    }
+  }
   return (
     <MainContainer>
-      <ProfileImg />
-      <AurhText>Authorization</AurhText>
-      <InputLogin />
-      <InputPass />
-      <ButtonContainer>
-        <ButtonSign>
-          <SignText>Sign in</SignText>
-        </ButtonSign>
-        <ButtonReg onPress={() => navigations.navigate('Registration')}>
-          <RegText>Registration </RegText>
-        </ButtonReg>
-      </ButtonContainer>
+      <SvgContainer>
+        <SvgProfile />
+      </SvgContainer>
+      <AuthText>Authorization</AuthText>
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit }) => (
+          <View>
+            <Field
+              name="email"
+              lable="Email"
+              component={AuthInput}
+              valid={validationEmail}
+              onChangeText={(val: string) => {
+                onChangeEmail(val);
+              }}
+            />
+            <Field
+              name="passwprd"
+              lable="Passwprd"
+              component={AuthInput}
+              secureTextEntry={true}
+              valid={validationPass}
+              onChangeText={(val: string) => {
+                onChangePassword(val);
+              }}
+              errorExists={user.errorExists}
+              errorText={user.errorText}
+            />
+            <ButtonContainer>
+              <ButtonSign onPress={handleSubmit}>
+                <SignText>{userLoader ? 'load...' : 'Sign in'}</SignText>
+              </ButtonSign>
+              <ButtonReg onPress={() => navigations.navigate('Registration')}>
+                <RegText>Registration </RegText>
+              </ButtonReg>
+            </ButtonContainer>
+            <Text>{user.errorText}</Text>
+          </View>
+        )}
+      />
     </MainContainer>
   );
 }

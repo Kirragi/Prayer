@@ -1,19 +1,19 @@
 import { call, put } from 'redux-saga/effects';
 import {
-    signInActionCreator,
-    requestSignInActionCreator,
-    requestSignUpActionCreator,
-    signUpActionCreator,
-    onErrorActionCreator,
+    signInAction,
+    requestSignInAction,
+    requestSignUpAction,
+    signUpAction,
+    onErrorAction,
 } from '../User/actions';
 import { signIn, signUp } from '../../../api/User/requests';
-import { setUserLoaderActionCreator } from '../Loader/actions';
+import { setUserLoaderAction } from '../Loader/actions';
 
 export function* userSignInWorkSaga({
     payload,
-}: ReturnType<typeof requestSignInActionCreator>) {
+}: ReturnType<typeof requestSignInAction>) {
     yield put({
-        type: setUserLoaderActionCreator.type,
+        type: setUserLoaderAction.type,
         payload: {
             newValue: true,
         },
@@ -21,15 +21,28 @@ export function* userSignInWorkSaga({
     const { data } = yield call(signIn, payload.email, payload.password);
     if (data.name === 'EntityNotFound') {
         yield put({
-            type: onErrorActionCreator.type,
+            type: onErrorAction.type,
             payload: {
                 errorExists: true,
                 errorText: 'Неправильное имя пользователя или пароль',
             },
         });
+        yield put({
+            type: setUserLoaderAction.type,
+            payload: {
+                newValue: false,
+            },
+        });
     } else {
         yield put({
-            type: signInActionCreator.type,
+            type: onErrorAction.type,
+            payload: {
+                errorExists: false,
+                errorText: '',
+            },
+        });
+        yield put({
+            type: signInAction.type,
             payload: {
                 logged: true,
                 userId: data.id,
@@ -41,7 +54,7 @@ export function* userSignInWorkSaga({
             },
         });
         yield put({
-            type: setUserLoaderActionCreator.type,
+            type: setUserLoaderAction.type,
             payload: {
                 newValue: false,
             },
@@ -51,16 +64,17 @@ export function* userSignInWorkSaga({
 
 export function* userSignUpWorkSaga({
     payload,
-}: ReturnType<typeof requestSignUpActionCreator>) {
+}: ReturnType<typeof requestSignUpAction>) {
     const { data } = yield call(
         signUp,
         payload.email,
         payload.name,
         payload.password,
     );
+
     if (data.severity === 'ERROR') {
         yield put({
-            type: onErrorActionCreator.type,
+            type: onErrorAction.type,
             payload: {
                 errorExists: true,
                 errorText: 'Пользователь уже зарегистрирован',
@@ -68,7 +82,15 @@ export function* userSignUpWorkSaga({
         });
     } else {
         yield put({
-            type: signUpActionCreator.type,
+            type: onErrorAction.type,
+            payload: {
+                errorExists: false,
+                errorText: '',
+            },
+        });
+        yield put({
+
+            type: signUpAction.type,
             payload: {
                 logged: true,
                 userId: data.id,

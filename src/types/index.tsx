@@ -1,56 +1,25 @@
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
-export type RootStackParamList = {
-  Registration: undefined;
-  Authentication: undefined;
-  MyDesk: undefined;
-  Prayer: { columnId: string };
-  Details: {
-    prayerDetail: PrayerType;
-  };
-};
-export type authenticationScreenProp = StackNavigationProp<
-  RootStackParamList,
-  'Authentication'
->;
+import { FieldRenderProps } from 'react-final-form';
 
-export type registrationScreenProp = StackNavigationProp<
-  RootStackParamList,
-  'Registration'
->;
-
-export type MyDeskScreenProp = StackNavigationProp<
-  RootStackParamList,
-  'MyDesk'
->;
-export type PrayerScreenProp = StackNavigationProp<
-  RootStackParamList,
-  'Prayer'
->;
-export type PrayerDetailsScreenProp = StackNavigationProp<
-  RootStackParamList,
-  'Details'
->;
-export type PrayerDetailsRouteProp = RouteProp<RootStackParamList, 'Details'>;
-
-export type PrayerScreenRouteProp = RouteProp<RootStackParamList, 'Prayer'>;
-
-export type ColumnType = {
+export type Columns = {
+  id: number;
   title: string;
   description: string;
+  userId: number;
 };
-export type CommentType = {
-  id: string;
-  author: string;
+export type Comments = {
+  id: number;
   body: string;
-  dateCreate: string;
-  image: string;
+  created: string;
+  prayerId: number;
+  userId: number;
 };
-export type PrayerType = {
-  id: string;
+export type Prayer = {
+  id: number;
   title: string;
   description: string;
   checked: boolean;
+  columnId: number;
+  commentsIds: number[];
 };
 export type UserSignIn = {
   email: string;
@@ -74,11 +43,27 @@ export type User = {
 };
 export type Loader = {
   user: boolean;
+  columns: boolean;
+  prayer: boolean;
+  comments: boolean;
 };
 export type State = {
   user: User;
-  Column: ColumnType[];
-  Comment: CommentType[];
-  Prayer: PrayerType[];
-  PrayerMenu: boolean;
+  columns: Columns[];
+  comments: Comments[];
+  prayer: Prayer[];
+  loader: Loader;
 };
+export interface PrayerMenyProps {
+  statusMenu: boolean;
+  useStausMenu(statusMenu: boolean): void;
+}
+export interface PrayerProps {
+  prayer: Prayer;
+}
+export interface PrayerListProps {
+  column: number;
+}
+export interface CommentListProps {
+  prayerId: number;
+}
